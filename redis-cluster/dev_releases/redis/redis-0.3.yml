@@ -1,0 +1,17 @@
+name: redis
+version: "0.3"
+commit_hash: 42c4d38
+uncommitted_changes: true
+jobs:
+- name: redis
+  version: a46e8aa0152e1ac96a069359d0c973619cb7779c3eb438ea67d80e4d704c3184
+  fingerprint: a46e8aa0152e1ac96a069359d0c973619cb7779c3eb438ea67d80e4d704c3184
+  sha1: sha256:89f641039e5af5f15a4e185094894f17fe9fb1c33cfa026e04063549059c20d2
+  packages:
+  - redis
+packages:
+- name: redis
+  version: c30691cc4f9484aab55d6870ca179f2649d253adfb8438d89ce9f47fa8c6fbef
+  fingerprint: c30691cc4f9484aab55d6870ca179f2649d253adfb8438d89ce9f47fa8c6fbef
+  sha1: sha256:f47471674fa97b9b72ea528b373ac545e6c98cc34ef32236a7de81ed608ede2e
+  dependencies: []

@@ -1,0 +1,1685 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/bosh-beyond-this-course/create-a-release/
+Subject: BOSH Fundamentals - Create a release
+Date: Tue, 16 Aug 2022 07:10:39 -0000
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----"
+
+
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/html
+Content-ID: <frame-1D2A02014704D2F26574EDA3ADCF6944@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/bosh-beyond-this-course/create-a-release/
+
+<!DOCTYPE html><html lang=3D"en"><head><meta http-equiv=3D"Content-Type" co=
+ntent=3D"text/html; charset=3DUTF-8"><link rel=3D"stylesheet" type=3D"text/=
+css" href=3D"cid:css-9e3e879e-d77a-4c42-9529-509fcb3d88e6@mhtml.blink" /><l=
+ink rel=3D"stylesheet" type=3D"text/css" href=3D"cid:css-b6ea908f-d972-4d42=
+-b3a4-f35262239f46@mhtml.blink" />
+
+<meta name=3D"course version" content=3D"1.4.77">
+<meta name=3D"generator" content=3D"io.pivotal.pal.shipkin:shipkin-plugin:8=
+.4.2, https://github.com/platform-acceleration-lab/shipkin">
+<meta name=3D"generated on" content=3D"2019-12-10T17:42:43.836Z">
+<meta name=3D"theme-color" content=3D"#2160af">
+
+
+
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1"=
+>
+
+<title>BOSH Fundamentals - Create a release</title>
+
+<link rel=3D"icon" href=3D"https://pivotal-courses.vela.decc.vmware.com/cou=
+rses/cloud-foundry-bosh/favicon.png">
+
+<link rel=3D"stylesheet" href=3D"https://pivotal-courses.vela.decc.vmware.c=
+om/courses/cloud-foundry-bosh/css/reset.css">
+<link rel=3D"stylesheet" href=3D"https://pivotal-courses.vela.decc.vmware.c=
+om/courses/cloud-foundry-bosh/css/theme.css">
+<link rel=3D"stylesheet" href=3D"https://pivotal-courses.vela.decc.vmware.c=
+om/courses/cloud-foundry-bosh/css/highlight.js.min.css">
+<link rel=3D"stylesheet" href=3D"https://pivotal-courses.vela.decc.vmware.c=
+om/courses/cloud-foundry-bosh/css/github.css">
+
+
+
+<link rel=3D"stylesheet" href=3D"https://pivotal-courses.vela.decc.vmware.c=
+om/courses/cloud-foundry-bosh/css/custom.css">
+</head>
+<body>
+
+
+
+
+<header>
+    <div class=3D"container">
+        <a id=3D"bosh-logo" href=3D"https://pivotal-courses.vela.decc.vmwar=
+e.com/courses/cloud-foundry-bosh/"></a>
+        <h1>Create a release</h1>
+    </div>
+</header>
+
+
+<a class=3D"feedback" href=3D"https://docs.google.com/forms/d/e/1FAIpQLScHK=
+fXAhqSJ7QUTyfUq1rC1hzNqoDi9KE1KpKlEenlfOvpwQg/viewform?entry.1915922799=3Dh=
+ttps://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/bosh=
+-beyond-this-course/create-a-release/" data-url-field=3D"entry.1915922799" =
+target=3D"_blank" rel=3D"noreferrer noopener">
+    <button>feedback</button>
+</a>
+
+<main id=3D"main">
+
+    <div id=3D"content" class=3D"container">
+        <article>
+ <h1 id=3D"purpose">Purpose</h1>
+<p>This lab introduces the concepts of creating a BOSH release.</p>
+<ul>
+<li>Examine (inspect) local BOSH CLI interactions.</li>
+<li>Analyze (investigate) the structure of a BOSH release.</li>
+<li>Compare (contrast) the contents of an existing BOSH release with your
+current release methodology.</li>
+<li>Demonstrate (manipulate) an existing release a BOSH release to effect
+an update of a stemcell.</li>
+<li>Verify (test) your new release works.</li>
+</ul>
+<h1 id=3D"discussion-points">Discussion points</h1>
+<p>
+</p><ul>
+<li>Separation of Concerns</li>
+<li>Encapsulation</li>
+<li>Repeatability</li>
+</ul>
+<p></p>
+<h1 id=3D"starting-point">Starting point</h1>
+<p>We will use the BOSH CLI, so make sure that it is installed on your
+machine.</p>
+<p>Create an empty directory called <code>~/workspace/cloud-foundry-bosh-co=
+urse</code>
+and cd into it.</p>
+<h1 id=3D"release-blueprint">Release blueprint</h1>
+<p>For our first release we will be packaging a popular web server called
+<a href=3D"https://www.nginx.com/" rel=3D"noreferrer noopener">nginx</a>.</=
+p>
+<p>Create a release directory named <code>nginx-release</code> and initiali=
+ze a
+release using the BOSH CLI via the <code>init-release</code> command.
+Use the help function of the CLI to learn more about the <code>init-release=
+</code>
+command and its arguments.</p>
+<p>Look at the directory structure.
+What do you notice?</p>
+<pre><code class=3D"language-no-highlight">.
+=E2=94=9C=E2=94=80=E2=94=80 config
+=E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 blobs.yml
+=E2=94=82   =E2=94=94=E2=94=80=E2=94=80 final.yml
+=E2=94=9C=E2=94=80=E2=94=80 jobs
+=E2=94=9C=E2=94=80=E2=94=80 packages
+=E2=94=94=E2=94=80=E2=94=80 src
+</code></pre>
+<p>This directory structure represents the basis of your new BOSH release
+and introduces the following topics, which can be briefly described as
+follows:</p>
+<ul>
+<li><em>Jobs</em> describe pieces of the service or application you are
+releasing.</li>
+<li><em>Packages</em> provide source code and dependencies to jobs.</li>
+<li><em>Source</em> provides non-binary files to packages.</li>
+<li><em>Blobs</em> provide binary files (other than those checked into a so=
+urce
+code repository) to packages.</li>
+</ul>
+<h1 id=3D"files">Files</h1>
+<p>A BOSH release contains the source code for all of its dependencies.
+Since you acquired nginx from an untrusted source (the Internet), BOSH
+keeps track of the blob file hashes to verify the integrity of the software=
+.</p>
+<h2 id=3D"nginx-source">Nginx source</h2>
+<ol>
+<li>
+<p>Download the <a href=3D"http://nginx.org/en/download.html" rel=3D"norefe=
+rrer noopener">source nginx tar file</a>.</p>
+</li>
+<li>
+<p>Use the BOSH CLI's <code>add-blob</code>command to attach the nginx tar =
+file.
+Use <code>nginx.tar.gz</code> as the <code>BLOBS-PATH</code> argument.</p>
+</li>
+<li>
+<p>Inspect the file hash (using <code>sha</code> or <code>shasum</code>) by=
+ using the BOSH
+CLI's <code>blobs</code> command. Compare the file hash in the <code>shasum=
+</code> command
+to the newly created <code>config/blobs.yml</code> file.</p>
+<p>What does the output look like?</p>
+</li>
+</ol>
+<h2 id=3D"nginx-config-file">Nginx config file</h2>
+<p>Create an <code>nginx.conf</code> file in the <code>src</code> directory=
+, which is home to
+static resources.
+This is the main configuration file used by nginx.
+Add the below content to the <code>nginx.conf</code> file.</p>
+<pre><code class=3D"language-no-highlight">user nobody vcap;
+error_log /var/vcap/sys/log/nginx/nginx.err.log;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  server {
+    listen *:80;
+    location / {
+      root /var/vcap/jobs/nginx/html;
+      index index.html;
+      access_log /var/vcap/sys/log/nginx/nginx.access.log combined;
+    }
+  }
+}
+</code></pre>
+<h1 id=3D"package">Package</h1>
+<p>Now that the dependencies are defined, we must describe how to transform
+the source into an executable binary.
+In BOSH vocabulary, this aspect of the release is known as a
+<a href=3D"https://bosh.io/docs/terminology/#package" rel=3D"noreferrer noo=
+pener">package</a>.</p>
+<p>Use the <code>generate-package</code> command to create the package, usi=
+ng <code>nginx</code>
+as the <code>NAME</code> argument.</p>
+<h2 id=3D"spec-file">Spec file</h2>
+<p>The <a href=3D"https://bosh.io/docs/packages/#edit-a-package-spec" rel=
+=3D"noreferrer noopener">Package Spec file</a>
+defines the contents of a package.
+Edit the <code>spec</code> file in the <code>packages/nginx</code> director=
+y to contain the
+following content.</p>
+<pre><code class=3D"language-yaml hljs"><span class=3D"hljs-attr">name:</sp=
+an> <span class=3D"hljs-string">nginx</span>
+
+<span class=3D"hljs-attr">dependencies:</span> <span class=3D"hljs-string">=
+[]</span>
+
+<span class=3D"hljs-attr">files:</span>
+<span class=3D"hljs-bullet">-</span> <span class=3D"hljs-string">nginx.tar.=
+gz</span>
+<span class=3D"hljs-bullet">-</span> <span class=3D"hljs-string">nginx.conf=
+</span>
+</code></pre>
+<p>BOSH does not really differentiate between <code>blob</code> and <code>s=
+rc</code> resources in
+the context of a package.
+It treats these both as simple <em>files</em> that must be available for
+packaging.</p>
+<h2 id=3D"packaging-script">Packaging script</h2>
+<p>The <a href=3D"https://bosh.io/docs/packages/#create-a-packaging-script"=
+ rel=3D"noreferrer noopener">Packaging script</a>
+is used to define the compilation steps which prepare your software for
+the target OS.
+Edit the <code>packaging</code> file in the <code>packages/nginx</code> dir=
+ectory to contain
+the following content.</p>
+<pre><code class=3D"language-bash hljs"><span class=3D"hljs-built_in">set</=
+span> -e -x
+
+tar xzf nginx.tar.gz
+<span class=3D"hljs-built_in">pushd</span> nginx-*
+  ./configure \
+    --prefix=3D<span class=3D"hljs-variable">${BOSH_INSTALL_TARGET}</span> =
+\
+    --without-http_rewrite_module
+   make
+   make install
+<span class=3D"hljs-built_in">popd</span>
+
+cp nginx.conf <span class=3D"hljs-variable">${BOSH_INSTALL_TARGET}</span>/c=
+onf/
+</code></pre>
+<p>A few details on the packing script:</p>
+<ul>
+<li>The files listed in the <code>spec</code> file are available in the wor=
+king
+directory of the script.</li>
+<li>By convention, each compilation step will be surrounded by a <code>push=
+d</code>
+and <code>popd</code> pair which makes these steps easy to distinguish.</li=
+>
+<li>The resulting binaries <em>must</em> be deposited in the
+<code>${BOSH_INSTALL_TARGET}</code> directory for the compilation to be
+successful.
+All other directories are considered ephemeral.</li>
+</ul>
+<h1 id=3D"job">Job</h1>
+<p>The purpose of a <a href=3D"https://bosh.io/docs/terminology/#job" rel=
+=3D"noreferrer noopener">job</a> is to
+describe the runtime configuration of the binaries.
+The job will include control scripts, monit files, and spec files.</p>
+<p>Use the <code>generate-job</code> command to create your first job, usin=
+g <code>nginx</code>
+as the <code>NAME</code> argument.</p>
+<p>The <code>generate-job</code> command generates a set of boilerplate fil=
+es in the
+<code>jobs/nginx</code> directory.
+Review the generated files.
+What do you notice?</p>
+<h2 id=3D"control-script">Control script</h2>
+<p>Create a <em>control script</em> file named <code>ctl.erb</code> with th=
+e following
+content in the <code>jobs/nginx/templates</code> directory.</p>
+<pre><code class=3D"language-bash hljs"><span class=3D"hljs-comment">#!/bin=
+/bash -e</span>
+
+PIDFILE=3D/var/vcap/sys/run/nginx/pid
+
+<span class=3D"hljs-keyword">case</span> <span class=3D"hljs-variable">$1</=
+span> <span class=3D"hljs-keyword">in</span>
+    start)
+        /var/vcap/packages/nginx/sbin/nginx -g <span class=3D"hljs-string">=
+"pid <span class=3D"hljs-variable">${PIDFILE}</span>;"</span>
+        ;;
+    stop)
+        <span class=3D"hljs-built_in">kill</span> $(cat <span class=3D"hljs=
+-variable">${PIDFILE}</span>)
+        ;;
+    *)
+        <span class=3D"hljs-built_in">echo</span> <span class=3D"hljs-strin=
+g">"Usage: ctl {start|stop}"</span>
+        ;;
+<span class=3D"hljs-keyword">esac</span>
+</code></pre>
+<p>Control scripts are responsible for starting and stopping runtime
+processes in a controlled manner.
+They are typically produced as <a href=3D"http://apidock.com/ruby/ERB" rel=
+=3D"noreferrer noopener">ERB</a>
+template files which allows for dynamic expression evaluation.
+Since we are using a basic setup, this template looks like a shell
+script.</p>
+<h2 id=3D"monit-file">Monit file</h2>
+<p>Edit the <code>monit</code> file in the <code>jobs/nginx</code> director=
+y to contain the
+content below.</p>
+<pre><code class=3D"language-no-highlight">check process nginx
+  with pidfile /var/vcap/sys/run/nginx/pid
+  start program "/var/vcap/jobs/nginx/bin/ctl start"
+  stop program "/var/vcap/jobs/nginx/bin/ctl stop"
+  group vcap
+</code></pre>
+<p><a href=3D"https://mmonit.com/monit/" rel=3D"noreferrer noopener">Monit<=
+/a> is a free, open source process
+supervision tool which provides BOSH with its first defence against
+unwanted downtime.
+Our job requires a <em>Monit file</em> to instruct the Monit daemon how to
+start, stop and monitor our job at runtime.</p>
+<p>As a pair, the control script and the Monit file paint a clear picture
+of process lifecycle within BOSH.</p>
+<h2 id=3D"index-page">Index Page</h2>
+<p>Create a file named <code>index.html.erb</code> in the <code>jobs/nginx/=
+templates</code>
+directory with the following content.</p>
+<pre><code class=3D"language-ruby hljs">&lt;%=3D p(<span class=3D"hljs-stri=
+ng">'index'</span>) %&gt;
+</code></pre>
+<p>Like all web servers, nginx needs a root level index page (again in the
+format of an ERB template).
+This template includes <code>p('index')</code> which locates the property n=
+amed
+<em>index</em> and substitutes its value.</p>
+<p>We will use the resulting <code>index.html</code> page to test nginx.</p=
+>
+<h2 id=3D"spec-file-1">Spec file</h2>
+<p>The <a href=3D"https://bosh.io/docs/jobs/#spec" rel=3D"noreferrer noopen=
+er">Job Spec file</a> defines job
+metadata.
+Edit the <code>spec</code> file in the <code>jobs/nginx</code> directory to=
+ contain the
+content below.</p>
+<pre><code class=3D"language-yaml hljs"><span class=3D"hljs-attr">name:</sp=
+an> <span class=3D"hljs-string">nginx</span>
+
+<span class=3D"hljs-attr">templates:</span>
+  <span class=3D"hljs-string">ctl.erb:</span> <span class=3D"hljs-string">b=
+in/ctl</span>                <span class=3D"hljs-comment"># /var/vcap/jobs/=
+nginx/bin/ctl</span>
+  <span class=3D"hljs-string">index.html.erb:</span> <span class=3D"hljs-st=
+ring">html/index.html</span> <span class=3D"hljs-comment"># /var/vcap/jobs/=
+nginx/html/index.html</span>
+
+<span class=3D"hljs-attr">packages:</span>
+<span class=3D"hljs-bullet">-</span> <span class=3D"hljs-string">nginx</spa=
+n>
+
+<span class=3D"hljs-attr">properties:</span>
+<span class=3D"hljs-attr">  index:</span>
+<span class=3D"hljs-attr">    description:</span> <span class=3D"hljs-strin=
+g">Contents</span> <span class=3D"hljs-string">of</span> <span class=3D"hlj=
+s-string">your</span> <span class=3D"hljs-string">index.html</span>
+<span class=3D"hljs-attr">    default:</span> <span class=3D"hljs-string">&=
+lt;html&gt;&lt;body&gt;&lt;p&gt;Hello</span> <span class=3D"hljs-string">Wo=
+rld&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</span>
+</code></pre>
+<p>The Job Spec file pulls everything together, referencing the <em>control
+script</em>, the index page and the compiled nginx package.
+Notice the property referred to previously in the index page template.</p>
+<p>We are finally ready to create our deployment-ready release.</p>
+<h1 id=3D"shrink-wrap-release">Shrink wrap release</h1>
+<p>Use the <code>create-release</code> command to create the release, makin=
+g sure to
+include the <code>--force</code> and <code>--tarball</code> options.</p>
+<p>Pass <code>release.tgz</code> as the argument to the <code>--tarball</co=
+de> option, which
+specifies the name of the release file.
+The <code>--force</code> option is helpful during the development of a rele=
+ase
+since it ensures that all files (blobs and source) are transmitted to
+the director.</p>
+<p>The structure of the finished release looks like this.</p>
+<pre><code class=3D"language-no-highlight">.
+=E2=94=9C=E2=94=80=E2=94=80 blobs
+=E2=94=82&nbsp;&nbsp; =E2=94=94=E2=94=80=E2=94=80 nginx.tar.gz
+=E2=94=9C=E2=94=80=E2=94=80 config
+=E2=94=82&nbsp;&nbsp; =E2=94=9C=E2=94=80=E2=94=80 blobs.yml
+=E2=94=82&nbsp;&nbsp; =E2=94=94=E2=94=80=E2=94=80 final.yml
+=E2=94=9C=E2=94=80=E2=94=80 dev_releases
+=E2=94=82&nbsp;&nbsp; =E2=94=94=E2=94=80=E2=94=80 nginx
+=E2=94=82&nbsp;&nbsp;     =E2=94=9C=E2=94=80=E2=94=80 index.yml
+=E2=94=82&nbsp;&nbsp;     =E2=94=94=E2=94=80=E2=94=80 nginx-0+dev.1.yml
+=E2=94=9C=E2=94=80=E2=94=80 jobs
+=E2=94=82&nbsp;&nbsp; =E2=94=94=E2=94=80=E2=94=80 nginx
+=E2=94=82&nbsp;&nbsp;     =E2=94=9C=E2=94=80=E2=94=80 monit
+=E2=94=82&nbsp;&nbsp;     =E2=94=9C=E2=94=80=E2=94=80 spec
+=E2=94=82&nbsp;&nbsp;     =E2=94=94=E2=94=80=E2=94=80 templates
+=E2=94=82&nbsp;&nbsp;         =E2=94=9C=E2=94=80=E2=94=80 ctl.erb
+=E2=94=82&nbsp;&nbsp;         =E2=94=94=E2=94=80=E2=94=80 index.html.erb
+=E2=94=9C=E2=94=80=E2=94=80 packages
+=E2=94=82&nbsp;&nbsp; =E2=94=94=E2=94=80=E2=94=80 nginx
+=E2=94=82&nbsp;&nbsp;     =E2=94=9C=E2=94=80=E2=94=80 packaging
+=E2=94=82&nbsp;&nbsp;     =E2=94=94=E2=94=80=E2=94=80 spec
+=E2=94=9C=E2=94=80=E2=94=80 release.tgz
+=E2=94=94=E2=94=80=E2=94=80 src
+    =E2=94=94=E2=94=80=E2=94=80 nginx.conf
+</code></pre>
+<p>Do you notice anything unexpected?</p>
+<p>The <code>--tarball</code> option has caused the BOSH CLI to emit a <cod=
+e>.tgz</code> file
+for us at the root of our release structure.
+This gives us an opportunity to inspect the release structure and
+contents of a completed release in its commonly shipped format.</p>
+<h1 id=3D"wrap-up">Wrap up</h1>
+<p>
+</p><ul>
+<li>To package nginx as a BOSH release we added the nginx source as a blob.=
+</li>
+<li>We created an nginx package to describe transforming the source into a =
+binary.</li>
+<li>We created an nginx job to describe transforming the binary into a runn=
+ing process.</li>
+</ul>
+<p></p>
+         </article>
+        <div class=3D"sidebar-container">
+<nav id=3D"sidebar" class=3D"">
+    <div class=3D"title">
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/index.html">Return to BOSH Fundamentals</a>
+    </div>
+    <div class=3D"content">
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#">Back to top</a>
+
+<ul>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#purpose" class=3D=
+"highlight">Purpose</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#discussion-points=
+" class=3D"">Discussion points</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#starting-point" c=
+lass=3D"">Starting point</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#release-blueprint=
+" class=3D"">Release blueprint</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#files" class=3D""=
+>Files</a>
+
+<ul>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#nginx-source" cla=
+ss=3D"">Nginx source</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#nginx-config-file=
+" class=3D"">Nginx config file</a>
+
+        </li>
+</ul>
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#package" class=3D=
+"">Package</a>
+
+<ul>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#spec-file" class=
+=3D"">Spec file</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#packaging-script"=
+ class=3D"">Packaging script</a>
+
+        </li>
+</ul>
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#job" class=3D"">J=
+ob</a>
+
+<ul>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#control-script" c=
+lass=3D"">Control script</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#monit-file" class=
+=3D"">Monit file</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#index-page" class=
+=3D"">Index Page</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#spec-file-1">Spec=
+ file</a>
+
+        </li>
+</ul>
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#shrink-wrap-relea=
+se">Shrink wrap release</a>
+
+        </li>
+        <li>
+        <a href=3D"https://pivotal-courses.vela.decc.vmware.com/courses/clo=
+ud-foundry-bosh/bosh-beyond-this-course/create-a-release/#wrap-up">Wrap up<=
+/a>
+
+        </li>
+</ul>
+    </div>
+</nav>
+        </div>
+    </div>
+</main>
+
+
+<div class=3D"slide" data-slide=3D"1">
+    <h1>Create a release</h1>
+        <ul>
+                <li>Separation of Concerns</li>
+                <li>Encapsulation</li>
+                <li>Repeatability</li>
+        </ul>
+</div>
+
+<div class=3D"slide transparent" data-slide=3D"2">
+    <h1>Get started!</h1>
+    <h2>Create a release</h2>
+</div>
+
+<div class=3D"slide" data-slide=3D"3">
+    <h1>Wrap up</h1>
+        <ul>
+                <li>To package nginx as a BOSH release we added the nginx s=
+ource as a blob.</li>
+                <li>We created an nginx package to describe transforming th=
+e source into a binary.</li>
+                <li>We created an nginx job to describe transforming the bi=
+nary into a running process.</li>
+        </ul>
+
+    <div class=3D"faces">
+        <svg class=3D"face" viewBox=3D"0 0 24 24">
+            <path d=3D"M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10=
+ 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 =
+0,1 20,12A8,8 0 0,1 12,20M13,9.94L14.06,11L15.12,9.94L16.18,11L17.24,9.94L1=
+5.12,7.82L13,9.94M8.88,9.94L9.94,11L11,9.94L8.88,7.82L6.76,9.94L7.82,11L8.8=
+8,9.94M12,17.5C14.33,17.5 16.31,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12=
+,17.5Z"></path>
+        </svg>
+
+        <svg class=3D"face" viewBox=3D"0 0 24 24">
+            <path d=3D"M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,=
+1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 =
+0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M12,20A8,8 0 0,0 20,=
+12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,=
+10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M9,14H15A1,1 0 0,1 16,15=
+A1,1 0 0,1 15,16H9A1,1 0 0,1 8,15A1,1 0 0,1 9,14Z"></path>
+        </svg>
+
+        <svg class=3D"face" viewBox=3D"0 0 24 24">
+            <path d=3D"M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10=
+ 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 =
+0,1 20,12A8,8 0 0,1 12,20M16.18,7.76L15.12,8.82L14.06,7.76L13,8.82L14.06,9.=
+88L13,10.94L14.06,12L15.12,10.94L16.18,12L17.24,10.94L16.18,9.88L17.24,8.82=
+L16.18,7.76M7.82,12L8.88,10.94L9.94,12L11,10.94L9.94,9.88L11,8.82L9.94,7.76=
+L8.88,8.82L7.82,7.76L6.76,8.82L7.82,9.88L6.76,10.94L7.82,12M12,14C9.67,14 7=
+.69,15.46 6.89,17.5H17.11C16.31,15.46 14.33,14 12,14Z"></path>
+        </svg>
+    </div>
+</div>
+
+
+<div class=3D"slide lemon-squeezy" data-slide=3D"7">
+    <h1>Easy peasy</h1>
+    <h1>lemon squeezy!</h1>
+</div>
+
+<div class=3D"slide" data-slide=3D"8">
+    <h1>Lunch time!</h1>
+    <label for=3D"lunch-end">will return</label>
+    <input type=3D"text" name=3D"lunch-end" data-time=3D"90">
+</div>
+
+<div class=3D"slide" data-slide=3D"9">
+    <h1>Break time!</h1>
+    <label for=3D"break-end">will return</label>
+    <input type=3D"text" name=3D"break-end" data-time=3D"15">
+</div>
+
+<audio src=3D"https://pivotal-courses.vela.decc.vmware.com/courses/cloud-fo=
+undry-bosh/audio/gong.mp3" id=3D"gong" preload=3D"">
+</audio>
+
+<div class=3D"slide" data-slide=3D"?">
+    <h2>Keyboard shortcuts</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Key</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>Show <em>introduction</em> slide</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Show <em>get started</em> slide</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Show <em>wrap up</em> slide</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Show <em>instructor notes</em></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>Easy peasy</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>Show <em>lunch time</em> slide</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>Show <em>break time</em> slide</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>Play gong sound</td>
+        </tr>
+        <tr>
+            <td>x</td>
+            <td>Close slide</td>
+        </tr>
+        <tr>
+            <td>?</td>
+            <td>Show this help message</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <div>
+        =C2=A9 Copyright 2019 Pivotal Software, Inc. All Rights Reserved. =
+=E2=80=A2
+        <a href=3D"https://pivotal.io/privacy-policy" rel=3D"noreferrer noo=
+pener">Privacy Policy</a> =E2=80=A2
+        <a href=3D"https://pivotal.io/legal" rel=3D"noreferrer noopener">Te=
+rms of Use</a>
+    </div>
+    <div>
+        <label class=3D"hidden-checkbox">
+            <input type=3D"checkbox" id=3D"instructor-mode">
+            <span>course version: 1.4.77<sup class=3D"check">IM</sup></span=
+>
+        </label>
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+</body></html>
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-9e3e879e-d77a-4c42-9529-509fcb3d88e6@mhtml.blink
+
+@charset "utf-8";
+
+#header { border-color: rgb(42, 100, 150); background-color: rgb(33, 96, 17=
+5); }
+
+.disclaimer { background-color: rgb(33, 96, 175); }
+
+footer { background-color: rgb(33, 96, 175); }
+
+.label.label-default { background-color: rgb(42, 100, 150); }
+
+a { color: rgb(42, 100, 150); }
+
+th { background-color: rgb(33, 96, 175); border-color: rgb(33, 96, 175); }
+
+blockquote::before { color: rgb(33, 96, 175); }
+
+.label.label-default:hover, .label.label-default:focus { background-color: =
+rgb(57, 115, 165); }
+
+a:hover, a:focus { color: rgb(57, 115, 165); }
+
+.slide { color: rgb(33, 96, 175); }
+
+.slide h2, .slide label { color: rgb(42, 100, 150); }
+
+.slide input { color: rgba(33, 96, 175, 0.65); }
+
+.face path { fill: rgb(42, 100, 150); }
+
+body { background-color: rgb(255, 255, 255); }
+
+.slide { background-color: rgba(255, 255, 255, 0.9); }
+
+.slide.text { background-color: rgb(255, 255, 255); }
+
+.slide h2, .slide label { color: inherit; }
+
+body { color: rgb(51, 51, 51); }
+
+td { border-color: rgb(51, 51, 51); }
+
+.slide::before { background-image: url("../../bosh-o.png"); background-size=
+: contain; background-repeat: no-repeat; content: ""; height: 120px; width:=
+ 115px; position: fixed; top: 20px; left: 20px; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-b6ea908f-d972-4d42-b3a4-f35262239f46@mhtml.blink
+
+@charset "utf-8";
+
+#bosh-logo { background: url("../../bosh-logo.png") 0px 0px / cover no-repe=
+at; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/bosh-logo.png
+
+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
+
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/css/reset.css
+
+@charset "utf-8";
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, b=
+lockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, i=
+mg, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i=
+, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, cap=
+tion, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, emb=
+ed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, se=
+ction, summary, time, mark, audio, video { margin: 0px; padding: 0px; borde=
+r: 0px; font: inherit; vertical-align: baseline; }
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, =
+nav, section { display: block; }
+
+body { line-height: 1; }
+
+ol, ul { list-style: none; }
+
+blockquote, q { quotes: none; }
+
+blockquote::before, blockquote::after, q::before, q::after { content: none;=
+ }
+
+table { border-collapse: collapse; border-spacing: 0px; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/css/theme.css
+
+@charset "utf-8";
+
+@import url("https://fonts.googleapis.com/css?family=3DSource+Sans+Pro:400,=
+400i,600,600i,700");
+
+html, body { font-size: 16px; font-family: "Source Sans Pro", sans-serif; l=
+ine-height: 1.5; color: rgb(36, 54, 65); box-sizing: border-box; min-height=
+: 100vh; }
+
+body { padding-bottom: 11rem; position: relative; }
+
+*, ::before, ::after { box-sizing: inherit; }
+
+* { -webkit-font-smoothing: antialiased; }
+
+h1, h2, h3 { margin-top: 0.5rem; margin-bottom: 0.33rem; }
+
+h4, h5 { margin-top: 0.33rem; margin-bottom: 0.33rem; }
+
+h1 { font-size: 2rem; }
+
+h2 { font-size: 1.5rem; }
+
+h3 { font-size: 1.25rem; }
+
+h4 { font-size: 1.125rem; }
+
+h5 { font-size: 1rem; }
+
+a { text-decoration: none; }
+
+a:hover { text-decoration: underline; }
+
+p, ul, ol, table { margin: 0px 0px 0.75rem; }
+
+ul, ol { padding-left: 2.5rem; }
+
+ol { list-style-type: decimal; }
+
+ul { list-style-type: disc; }
+
+ul ul, ul ol, ol ul, ol ol { margin-bottom: 0px; }
+
+ul p + ol, ul p + ul, ol p + ol, ol p + ul { margin-bottom: 1rem; }
+
+em { font-style: italic; }
+
+strong { font-weight: 600; }
+
+pre { display: block; padding: 0.75rem; margin: 0px 0px 0.75rem; position: =
+relative; line-height: 1.5; word-break: break-all; overflow-wrap: break-wor=
+d; color: rgb(51, 51, 51); border: 1px solid rgb(204, 204, 204); border-rad=
+ius: 0.25rem; background-color: rgb(248, 248, 248); }
+
+code { border: 1px solid rgb(232, 232, 232); padding: 0.125rem 0.25rem; bac=
+kground-color: rgb(248, 248, 248); border-radius: 0.25rem; font-family: Men=
+lo, Consolas, "Courier New", monospace; font-size: 90%; overflow-x: scroll;=
+ overflow-wrap: break-word; }
+
+pre code { border: none; white-space: pre; overflow-x: auto; padding: 0.45r=
+em; display: block; }
+
+blockquote { background-color: rgb(248, 248, 248); margin: 0px 0px 0.75rem;=
+ padding: 0.75rem 0.75rem 0.75rem 2.25rem; quotes: "=E2=80=9C" "=E2=80=9D" =
+"=E2=80=98" "=E2=80=99"; position: relative; }
+
+blockquote::before { content: open-quote; font-size: 4rem; position: absolu=
+te; top: -1rem; left: 0.25rem; }
+
+blockquote p { display: inline; }
+
+sup { top: -0.5em; font-size: 75%; line-height: 0; position: relative; vert=
+ical-align: baseline; }
+
+button { color: white; background-color: rgb(96, 117, 128); text-transform:=
+ uppercase; font-weight: 600; font-size: 0.9rem; border-radius: 0.2rem; bor=
+der: none; padding: 0.75rem 1.25rem; cursor: pointer; }
+
+img, svg { max-width: 100%; }
+
+button:hover { background-color: rgb(61, 74, 81); }
+
+th { color: white; padding: 0.5rem; text-align: left; font-weight: bold; }
+
+td, th { border: 1px solid rgb(36, 54, 65); padding: 0.5rem; }
+
+#content { display: flex; position: relative; }
+
+#content > article { flex: 1 1 0%; overflow: auto hidden; }
+
+#content img.figure, #content svg.figure { max-width: 96%; margin: 0.25rem;=
+ border: 1px solid rgb(221, 221, 221); border-radius: 2px; box-shadow: rgba=
+(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(=
+0, 0, 0, 0.12) 0px 1px 5px 0px; }
+
+.container { margin: 0px auto; max-width: 76rem; padding: 2rem; }
+
+#header { min-height: 15.8rem; width: 100%; position: relative; border-top:=
+ 0.3rem solid; box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, =
+0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px; color: white=
+; }
+
+#header h1, #header h2 { font-weight: 600; }
+
+#header h1 { margin-top: 0px; margin-bottom: 0px; }
+
+#header h2 { margin-top: 0.6rem; }
+
+#header a { color: white; font-weight: 600; }
+
+#header a:hover { text-decoration: none; }
+
+#header .container { height: 100%; padding-top: 1.75rem; display: flex; }
+
+#header .container div { flex: 1 1 0%; }
+
+#header .container img { height: 9.4rem; width: 9.4rem; margin-right: 1.25r=
+em; }
+
+.disclaimer { color: white; font-size: 0.85rem; box-shadow: rgba(0, 0, 0, 0=
+.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.=
+12) 0px 1px 5px 0px; }
+
+.disclaimer .container { padding: 1rem; }
+
+.disclaimer a { color: white; text-decoration: underline; }
+
+.disclaimer p { margin-bottom: 0px; }
+
+.disclaimer a:hover { color: white; }
+
+.sidebar-container { margin-left: 1rem; flex-shrink: 0; }
+
+.sidebar-container, #sidebar { width: 18rem; }
+
+#sidebar { position: absolute; top: 1.25rem; border-width: 1px 1px 2px; bor=
+der-style: solid; border-color: rgba(0, 0, 0, 0.1); border-image: initial; =
+border-radius: 0.25rem; background-clip: padding-box; }
+
+#sidebar.top { position: fixed; top: 1.25rem; }
+
+#sidebar .title { padding: 0.5rem; border-bottom: 3px solid rgba(0, 0, 0, 0=
+.1); font-weight: 600; }
+
+#sidebar .content { padding: 0.5rem; }
+
+#sidebar ul { padding-left: 1.5rem; }
+
+#sidebar a.highlight { font-weight: bold; text-decoration: underline; }
+
+footer { text-align: center; box-shadow: rgba(0, 0, 0, 0.14) 0px -2px 2px 0=
+px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0p=
+x; position: absolute; bottom: 0px; width: 100%; padding: 2em; color: white=
+; }
+
+footer a, footer a:hover { color: white; }
+
+.feedback { position: fixed; bottom: 0px; right: 1rem; z-index: 1; }
+
+.feedback button { border-bottom-left-radius: 0px; border-bottom-right-radi=
+us: 0px; }
+
+ul.index { list-style: none; padding-left: 0px; }
+
+ul.index li { padding: 0.5rem 1rem; margin-bottom: -1px; border-top: 1px so=
+lid rgb(221, 221, 221); border-bottom: 1px solid rgb(221, 221, 221); displa=
+y: flex; justify-content: space-between; align-items: center; }
+
+ul.index li:hover { background-color: rgba(220, 220, 220, 0.1); }
+
+.links { display: flex; }
+
+.link { display: flex; width: 5rem; justify-content: flex-end; margin-left:=
+ 0.5rem; }
+
+.link .label { white-space: nowrap; overflow: hidden; text-overflow: ellips=
+is; }
+
+.toggle { display: inline-block; width: 100%; }
+
+.toggle.collapsed { margin-bottom: 0.75rem; }
+
+.when-collapsed::before, .when-expanded::before { content: ""; height: 1rem=
+; width: 1rem; background-position: center center; background-size: contain=
+; background-repeat: no-repeat; margin-right: 0.3rem; }
+
+.when-collapsed::before { background-image: url("data:image/svg+xml;utf8,<s=
+vg xmlns=3D\"http://www.w3.org/2000/svg\" width=3D\"16\" height=3D\"16\" vi=
+ewBox=3D\"0 0 48 48\"><path d=3D\"M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 =
+20-8.95 20-20S35.05 4 24 4zm10 22h-8v8h-4v-8h-8v-4h8v-8h4v8h8v4z\"/></svg>"=
+); }
+
+.when-expanded::before { background-image: url("data:image/svg+xml;utf8,<sv=
+g xmlns=3D\"http://www.w3.org/2000/svg\" width=3D\"16\" height=3D\"16\" vie=
+wBox=3D\"0 0 48 48\"><path d=3D\"M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 2=
+0-8.95 20-20S35.05 4 24 4zm10 22H14v-4h20v4z\"/></svg>"); }
+
+.toggle .when-collapsed, .toggle.collapsed .when-expanded, .collapse { disp=
+lay: none; }
+
+.toggle.collapsed .when-collapsed, .toggle .when-expanded { display: flex; =
+align-items: center; }
+
+.collapse.show { display: block; }
+
+.code-header { display: flex; justify-content: space-between; font-size: 0.=
+8rem; }
+
+.slide { position: fixed; z-index: 10; top: 0px; width: 100%; height: 100%;=
+ padding: 6.25rem; display: none; justify-content: center; align-items: cen=
+ter; flex-direction: column; text-align: center; }
+
+.slide p, .slide ul { font-size: 2.5rem; }
+
+.slide h1 { font-size: 5rem; font-weight: 600; }
+
+.slide h2 { font-size: 3.75rem; margin-top: 0px; }
+
+.slide table { text-align: left; }
+
+.slide th { font-weight: bold; }
+
+.slide th, .slide td { padding: 0.125rem 0.625rem; }
+
+.slide ul { text-align: left; }
+
+.slide input { outline: none; border: none; background: none; text-align: c=
+enter; font-size: 4.3rem; font-weight: bold; line-height: 1; }
+
+.slide.lemon-squeezy h1 { color: rgb(255, 205, 76); text-transform: upperca=
+se; font-size: 6.25rem; font-weight: 900; font-style: italic; line-height: =
+1; margin-bottom: 0px; margin-top: 0px; padding: 0px; text-shadow: rgba(255=
+, 205, 76, 0.6) 3px 3px 5px; }
+
+.slide.lemon-squeezy::before { background-image: url("data:image/svg+xml;ba=
+se64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj=
+8+PHN2ZyB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zO=
+mNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOnJkZj0iaHR0cDovL3d3=
+dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d=
+3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aW=
+V3Qm94PSIwIDAgNDUgNDUiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ1IDQ1O=
+yIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdmVyc2lvbj0iMS4xIiBpZD0ic3ZnMiI+PG1ldGFkYXRh=
+IGlkPSJtZXRhZGF0YTgiPjxyZGY6UkRGPjxjYzpXb3JrIHJkZjphYm91dD0iIj48ZGM6Zm9ybWF=
+0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD48ZGM6dHlwZSByZGY6cmVzb3VyY2U9Imh0dHA6Ly=
+9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIi8+PC9jYzpXb3JrPjwvcmRmOlJERj48L=
+21ldGFkYXRhPjxkZWZzIGlkPSJkZWZzNiI+PGNsaXBQYXRoIGlkPSJjbGlwUGF0aDE2IiBjbGlw=
+UGF0aFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggaWQ9InBhdGgxOCIgZD0iTSAwLDM2IDM=
+2LDM2IDM2LDAgMCwwIDAsMzYgWiIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIHRyYW5zZm9ybT0ibW=
+F0cml4KDEuMjUsMCwwLC0xLjI1LDAsNDUpIiBpZD0iZzEwIj48ZyBpZD0iZzEyIj48ZyBjbGlwL=
+XBhdGg9InVybCgjY2xpcFBhdGgxNikiIGlkPSJnMTQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRl=
+KDExLjQwNTMsMzIuNjYxMSkiIGlkPSJnMjAiPjxwYXRoIGlkPSJwYXRoMjIiIHN0eWxlPSJmaWx=
+sOiM1YzkxM2I7ZmlsbC1vcGFjaXR5OjE7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiIG=
+Q9Ik0gMCwwIEMgNi40OCwxLjI3NSA4LjQ1MywtMS4yNjUgMTEuNjU1LC0wLjA4NCAxNC44NTcsM=
+S4wOTcgMTEuNzQ4LC0yLjkwNCAxMC45MSwtMy41OTIgMTAuMDcsLTQuMjgxIDIuNzcsLTguNDAx=
+IC0wLjM5NiwtNi44OSAtMy41NjMsLTUuMzc5IC0zLjU4LC0wLjcwNSAwLDAiLz48L2c+PGcgdHJ=
+hbnNmb3JtPSJ0cmFuc2xhdGUoMTUuMDAxLDIwKSIgaWQ9ImcyNCI+PHBhdGggaWQ9InBhdGgyNi=
+Igc3R5bGU9ImZpbGw6Izc3YjI1NTtmaWxsLW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzd=
+HJva2U6bm9uZSIgZD0ibSAwLDAgYyAtMC4zMDQsMCAtMC42MDUsMC4xMzggLTAuODAxLDAuNCAt=
+MC42ODcsMC45MTYgLTEuMzA4LDEuOTU1IC0xLjk2NSwzLjA1NiAtMi4yNjgsMy43OTUgLTQuODM=
+5LDguMDk4IC0xMS40NTIsOS41NjggLTAuNTM5LDAuMTIgLTAuODc5LDAuNjU0IC0wLjc1OSwxLj=
+E5MyAwLjEyLDAuNTM5IDAuNjU0LDAuODc4IDEuMTkzLDAuNzU5IEMgLTYuMzMsMTMuMzIgLTMuN=
+DAyLDguNDE5IC0xLjA0OSw0LjQ4MSAtMC40MiwzLjQyNyAwLjE3NSwyLjQzMiAwLjc5OSwxLjYg=
+MS4xMywxLjE1OCAxLjA0MSwwLjUzMSAwLjU5OSwwLjIgMC40MTksMC4wNjUgMC4yMDgsMCAwLDA=
+iLz48L2c+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQuMjk5OCw0LjQ2NTgpIiBpZD0iZzI4Ij=
+48cGF0aCBpZD0icGF0aDMwIiBzdHlsZT0iZmlsbDojZmZjYzRkO2ZpbGwtb3BhY2l0eToxO2Zpb=
+GwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIiBkPSJtIDAsMCBjIDAuMDAyLDAuMDE3IC0wLjAw=
+MywwLjAyOCAtMC4wMDMsMC4wNDMgMi43NzQsNS4zMzUgMi42NDgsMTUuMTEzIC0zLjM0NiwyMS4=
+xMDcgLTUuOCw1LjggLTEzLjY3OSw1LjgyMSAtMTguNzY3LDQuMDY3IC0xLjU3OCwtMC42MTQgLT=
+IuOTE2LC0wLjA2NiAtMy44MTUsLTAuOTY1IC0wLjg4MSwtMC44ODEgLTAuMzUxLC0yLjcxOSAtM=
+C43MTQsLTMuODE5IC0zLjE2OSwtNS4yMDIgLTMuNDA1LC0xMy4wMjUgMi42ODcsLTE5LjExNyA0=
+Ljk2MiwtNC45NjIgMTAuNDM4LC02Ljg0MSAxOS45OCwtNC44NTIgMC4wMDIsMC4wMDIgMC4wMDU=
+sMTBlLTQgMC4wMDgsMC4wMDIgMS4xNDksMC4yMTggMi45NSwtMC41MjQgMy41NjcsMC4wOTQgQy=
+AwLjY4MywtMi4zNTUgLTAuMDk0LC0xLjA4MyAwLDAiLz48L2c+PGcgdHJhbnNmb3JtPSJ0cmFuc=
+2xhdGUoOC4yMDgsMjkuNDE3NSkiIGlkPSJnMzIiPjxwYXRoIGlkPSJwYXRoMzQiIHN0eWxlPSJm=
+aWxsOiM3N2IyNTU7ZmlsbC1vcGFjaXR5OjE7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmU=
+iIGQ9Im0gMCwwIGMgMCwwIC00LjI3LDAuNTkgLTYuODU3LC00LjU5OSAtMi41ODgsLTUuMTg4ID=
+AuNTgyLC05LjEyNCAwLjI4OSwtMTIuNjUyIC0wLjI5MywtMy41MzEgMS41NjYsLTEuMjY1IDIuN=
+jIxLDAuNDQ1IDEuMDU1LDEuNzEgNC4yMyw0Ljg5NCA0LjkzOCw5LjI2OSBDIDEuNjk5LC0zLjE2=
+MyAwLjkyMiwtMS4wODEgMCwwIi8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg=3D=3D"); }
+
+.slide label { text-transform: uppercase; font-weight: bold; margin-bottom:=
+ 0px; }
+
+.slide.text { text-align: left; justify-content: flex-start; overflow-y: sc=
+roll; }
+
+.slide .inner { font-size: 1rem; max-width: 44rem; }
+
+.slide .inner * { font-size: 1rem; }
+
+.slide.text h1 { font-size: 2.5rem; font-weight: 400; }
+
+.slide.text h2 { font-size: 1.6rem; }
+
+.slide.text h3 { font-size: 1.15rem; }
+
+.slide.text p { font-size: 1rem; }
+
+.faces { position: absolute; bottom: 1.25rem; right: 1.25rem; display: flex=
+; justify-content: space-between; width: 15.625rem; }
+
+.face { width: 3.75rem; height: 3.75rem; }
+
+.hidden-checkbox { user-select: none; cursor: pointer; color: white; }
+
+.hidden-checkbox input[type=3D"checkbox"] { position: absolute; left: -9999=
+px; }
+
+.hidden-checkbox :checked + span { transform: scale(1.1, 1.1) skewX(-12deg)=
+; text-shadow: white 0px 0px 5px; }
+
+.hidden-checkbox span { display: inline-block; transition: transform 200ms =
+ease 0s, text-shadow; }
+
+.hidden-checkbox .check { opacity: 0; }
+
+.hidden-checkbox :checked + span .check { transition: opacity 200ms ease 0s=
+; opacity: 1; }
+
+@media (max-width: 1050px) {
+  #sidebar, .sidebar-container { display: none; }
+}
+
+@media (max-width: 700px) {
+  .container { padding-left: 1rem; padding-right: 1rem; }
+  .links { flex-direction: column; }
+  .link:first-child { margin-top: 0.25rem; }
+  .link .label { margin-bottom: 0.25rem; }
+}
+
+@media print {
+  .feedback { display: none; }
+}
+
+.label { display: inline-block; border-radius: 3px; color: white; text-tran=
+sform: uppercase; font-weight: 700; padding: 0.125rem 0.5rem; font-size: 0.=
+75rem; }
+
+a.label:hover, a.label:focus { color: white; text-decoration: none; }
+
+.label-gray { background-color: rgb(153, 153, 153); }
+
+.label-gray[href]:hover, .label-gray[href]:focus { background-color: gray; =
+}
+
+.label-teal { background-color: rgb(0, 167, 157); }
+
+.label-teal[href]:hover, .label-teal[href]:focus { background-color: rgb(0,=
+ 116, 109); }
+
+.label-green { background-color: rgb(92, 184, 92); }
+
+.label-green[href]:hover, .label-green[href]:focus { background-color: rgb(=
+68, 157, 68); }
+
+.label-light-blue { background-color: rgb(91, 192, 222); }
+
+.label-light-blue[href]:hover, .label-light-blue[href]:focus { background-c=
+olor: rgb(49, 176, 213); }
+
+.label-orange { background-color: rgb(240, 173, 78); }
+
+.label-orange[href]:hover, .label-orange[href]:focus { background-color: rg=
+b(236, 151, 31); }
+
+.label-red { background-color: rgb(202, 112, 112); }
+
+.label-red[href]:hover, .label-red[href]:focus { background-color: rgb(188,=
+ 75, 75); }
+
+.partial-content.toggled { font-size: 0.9em; margin-left: 2em; border-left:=
+ 1px solid rgb(204, 204, 204); padding: 1.5em; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i,700
+
+@charset "utf-8";
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK1dSBYKcS=
+V-LCoeQqfX1RYOo3qPZ7qsDJB9cme_xc.woff2") format("woff2"); unicode-range: U+=
+460-52F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK1dSBYKcS=
+V-LCoeQqfX1RYOo3qPZ7jsDJB9cme_xc.woff2") format("woff2"); unicode-range: U+=
+301, U+400-45F, U+490-491, U+4B0-4B1, U+2116; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK1dSBYKcS=
+V-LCoeQqfX1RYOo3qPZ7rsDJB9cme_xc.woff2") format("woff2"); unicode-range: U+=
+1F00-1FFF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK1dSBYKcS=
+V-LCoeQqfX1RYOo3qPZ7ksDJB9cme_xc.woff2") format("woff2"); unicode-range: U+=
+370-3FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK1dSBYKcS=
+V-LCoeQqfX1RYOo3qPZ7osDJB9cme_xc.woff2") format("woff2"); unicode-range: U+=
+102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+1EA0-1EF9=
+, U+20AB; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK1dSBYKcS=
+V-LCoeQqfX1RYOo3qPZ7psDJB9cme_xc.woff2") format("woff2"); unicode-range: U+=
+100-24F, U+259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C=
+60-2C7F, U+A720-A7FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK1dSBYKcS=
+V-LCoeQqfX1RYOo3qPZ7nsDJB9cme.woff2") format("woff2"); unicode-range: U+0-F=
+F, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U=
++20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKwdSBYKcS=
+V-LCoeQqfX1RYOo3qPZY4lCdh18S0xR41YDw.woff2") format("woff2"); unicode-range=
+: U+460-52F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKwdSBYKcS=
+V-LCoeQqfX1RYOo3qPZY4lCdo18S0xR41YDw.woff2") format("woff2"); unicode-range=
+: U+301, U+400-45F, U+490-491, U+4B0-4B1, U+2116; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKwdSBYKcS=
+V-LCoeQqfX1RYOo3qPZY4lCdg18S0xR41YDw.woff2") format("woff2"); unicode-range=
+: U+1F00-1FFF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKwdSBYKcS=
+V-LCoeQqfX1RYOo3qPZY4lCdv18S0xR41YDw.woff2") format("woff2"); unicode-range=
+: U+370-3FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKwdSBYKcS=
+V-LCoeQqfX1RYOo3qPZY4lCdj18S0xR41YDw.woff2") format("woff2"); unicode-range=
+: U+102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+1EA0-=
+1EF9, U+20AB; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKwdSBYKcS=
+V-LCoeQqfX1RYOo3qPZY4lCdi18S0xR41YDw.woff2") format("woff2"); unicode-range=
+: U+100-24F, U+259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, =
+U+2C60-2C7F, U+A720-A7FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: italic; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKwdSBYKcS=
+V-LCoeQqfX1RYOo3qPZY4lCds18S0xR41.woff2") format("woff2"); unicode-range: U=
++0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+207=
+4, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcS=
+V-LCoeQqfX1RYOo3qNa7lujVj9_mf.woff2") format("woff2"); unicode-range: U+460=
+-52F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcS=
+V-LCoeQqfX1RYOo3qPK7lujVj9_mf.woff2") format("woff2"); unicode-range: U+301=
+, U+400-45F, U+490-491, U+4B0-4B1, U+2116; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcS=
+V-LCoeQqfX1RYOo3qNK7lujVj9_mf.woff2") format("woff2"); unicode-range: U+1F0=
+0-1FFF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcS=
+V-LCoeQqfX1RYOo3qO67lujVj9_mf.woff2") format("woff2"); unicode-range: U+370=
+-3FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcS=
+V-LCoeQqfX1RYOo3qN67lujVj9_mf.woff2") format("woff2"); unicode-range: U+102=
+-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+1EA0-1EF9, U=
++20AB; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcS=
+V-LCoeQqfX1RYOo3qNq7lujVj9_mf.woff2") format("woff2"); unicode-range: U+100=
+-24F, U+259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-=
+2C7F, U+A720-A7FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 400; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcS=
+V-LCoeQqfX1RYOo3qOK7lujVj9w.woff2") format("woff2"); unicode-range: U+0-FF,=
+ U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+2=
+0AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3i54rwmhdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++460-52F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3i54rwkxdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++301, U+400-45F, U+490-491, U+4B0-4B1, U+2116; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3i54rwmxdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++1F00-1FFF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3i54rwlBdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++370-3FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3i54rwmBdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+1EA0-1EF=
+9, U+20AB; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3i54rwmRdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++100-24F, U+259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2=
+C60-2C7F, U+A720-A7FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 600; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3i54rwlxdu3cOWxw.woff2") format("woff2"); unicode-range: U+0=
+-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074,=
+ U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 700; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3ig4vwmhdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++460-52F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 700; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3ig4vwkxdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++301, U+400-45F, U+490-491, U+4B0-4B1, U+2116; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 700; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3ig4vwmxdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++1F00-1FFF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 700; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3ig4vwlBdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++370-3FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 700; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3ig4vwmBdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+1EA0-1EF=
+9, U+20AB; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 700; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3ig4vwmRdu3cOWxy40.woff2") format("woff2"); unicode-range: U=
++100-24F, U+259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2=
+C60-2C7F, U+A720-A7FF; }
+
+@font-face { font-family: "Source Sans Pro"; font-style: normal; font-weigh=
+t: 700; src: url("https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcS=
+V-LCoeQqfX1RYOo3ig4vwlxdu3cOWxw.woff2") format("woff2"); unicode-range: U+0=
+-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074,=
+ U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/css/highlight.js.min.css
+
+@charset "utf-8";
+
+.hljs { display: block; overflow-x: auto; padding: 0.5em; background: rgb(2=
+40, 240, 240); text-size-adjust: none; }
+
+.hljs, .hljs-subst, .hljs-tag .hljs-title, .nginx .hljs-title { color: blac=
+k; }
+
+.hljs-string, .hljs-title, .hljs-constant, .hljs-parent, .hljs-tag .hljs-va=
+lue, .hljs-rule .hljs-value, .hljs-preprocessor, .hljs-pragma, .hljs-name, =
+.haml .hljs-symbol, .ruby .hljs-symbol, .ruby .hljs-symbol .hljs-string, .h=
+ljs-template_tag, .django .hljs-variable, .smalltalk .hljs-class, .hljs-add=
+ition, .hljs-flow, .hljs-stream, .bash .hljs-variable, .pf .hljs-variable, =
+.apache .hljs-tag, .apache .hljs-cbracket, .tex .hljs-command, .tex .hljs-s=
+pecial, .erlang_repl .hljs-function_or_atom, .asciidoc .hljs-header, .markd=
+own .hljs-header, .coffeescript .hljs-attribute { color: rgb(136, 0, 0); }
+
+.smartquote, .hljs-comment, .hljs-annotation, .diff .hljs-header, .hljs-chu=
+nk, .asciidoc .hljs-blockquote, .markdown .hljs-blockquote { color: rgb(136=
+, 136, 136); }
+
+.hljs-number, .hljs-date, .hljs-regexp, .hljs-literal, .hljs-hexcolor, .sma=
+lltalk .hljs-symbol, .smalltalk .hljs-char, .go .hljs-constant, .hljs-chang=
+e, .lasso .hljs-variable, .makefile .hljs-variable, .asciidoc .hljs-bullet,=
+ .markdown .hljs-bullet, .asciidoc .hljs-link_url, .markdown .hljs-link_url=
+ { color: rgb(0, 136, 0); }
+
+.hljs-label, .hljs-javadoc, .ruby .hljs-string, .hljs-decorator, .hljs-filt=
+er .hljs-argument, .hljs-localvars, .hljs-array, .hljs-attr_selector, .hljs=
+-important, .hljs-pseudo, .hljs-pi, .haml .hljs-bullet, .hljs-doctype, .hlj=
+s-deletion, .hljs-envvar, .hljs-shebang, .apache .hljs-sqbracket, .nginx .h=
+ljs-built_in, .tex .hljs-formula, .erlang_repl .hljs-reserved, .hljs-prompt=
+, .asciidoc .hljs-link_label, .markdown .hljs-link_label, .vhdl .hljs-attri=
+bute, .clojure .hljs-attribute, .asciidoc .hljs-attribute, .lasso .hljs-att=
+ribute, .coffeescript .hljs-property, .hljs-phony { color: rgb(136, 136, 25=
+5); }
+
+.hljs-keyword, .hljs-id, .hljs-title, .hljs-built_in, .css .hljs-tag, .hljs=
+-javadoctag, .hljs-phpdoc, .hljs-dartdoc, .hljs-yardoctag, .smalltalk .hljs=
+-class, .hljs-winutils, .bash .hljs-variable, .pf .hljs-variable, .apache .=
+hljs-tag, .hljs-type, .hljs-typename, .tex .hljs-command, .asciidoc .hljs-s=
+trong, .markdown .hljs-strong, .hljs-request, .hljs-status { font-weight: b=
+old; }
+
+.asciidoc .hljs-emphasis, .markdown .hljs-emphasis { font-style: italic; }
+
+.nginx .hljs-built_in { font-weight: normal; }
+
+.coffeescript .javascript, .javascript .xml, .lasso .markup, .tex .hljs-for=
+mula, .xml .javascript, .xml .vbscript, .xml .css, .xml .hljs-cdata { opaci=
+ty: 0.5; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/css/github.css
+
+@charset "utf-8";
+
+.hljs { display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51=
+, 51); background: rgb(248, 248, 248); }
+
+.hljs-comment, .hljs-quote { color: rgb(153, 153, 136); font-style: italic;=
+ }
+
+.hljs-keyword, .hljs-selector-tag, .hljs-subst { color: rgb(51, 51, 51); fo=
+nt-weight: bold; }
+
+.hljs-number, .hljs-literal, .hljs-variable, .hljs-template-variable, .hljs=
+-tag .hljs-attr { color: rgb(0, 128, 128); }
+
+.hljs-string, .hljs-doctag { color: rgb(221, 17, 68); }
+
+.hljs-title, .hljs-section, .hljs-selector-id { color: rgb(153, 0, 0); font=
+-weight: bold; }
+
+.hljs-subst { font-weight: normal; }
+
+.hljs-type, .hljs-class .hljs-title { color: rgb(68, 85, 136); font-weight:=
+ bold; }
+
+.hljs-tag, .hljs-name, .hljs-attribute { color: rgb(0, 0, 128); font-weight=
+: normal; }
+
+.hljs-regexp, .hljs-link { color: rgb(0, 153, 38); }
+
+.hljs-symbol, .hljs-bullet { color: rgb(153, 0, 115); }
+
+.hljs-built_in, .hljs-builtin-name { color: rgb(0, 134, 179); }
+
+.hljs-meta { color: rgb(153, 153, 153); font-weight: bold; }
+
+.hljs-deletion { background: rgb(255, 221, 221); }
+
+.hljs-addition { background: rgb(221, 255, 221); }
+
+.hljs-emphasis { font-style: italic; }
+
+.hljs-strong { font-weight: bold; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://pivotal-courses.vela.decc.vmware.com/courses/cloud-foundry-bosh/css/custom.css
+
+@charset "utf-8";
+
+header .container { height: 100px; padding: 1rem 2rem; display: flex; align=
+-items: center; }
+
+header h1 { margin-left: 1rem; margin-bottom: 0px; }
+
+#bosh-logo { display: block; width: 110px; height: 40px; }
+------MultipartBoundary--jMSZ8rT5WW1p7Us0baLr42KMMIZh21tsk58KWH6gcb------

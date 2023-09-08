@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+PIDFILE=/var/vcap/sys/run/redis/pid
+CONFILE=/var/vcap/jobs/redis/config/redis.conf
+case $1 in
+    start)
+        echo $$ > $PIDFILE 
+        exec /var/vcap/packages/redis/bin/redis-server $CONFILE
+        ;;
+    stop)
+        kill $(cat ${PIDFILE})
+        ;;
+    *)
+        echo "Usage: ctl {start|stop}"
+        ;;
+esac

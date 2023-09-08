@@ -1,0 +1,15 @@
+1. push backend app
+   cf push backend -p . [--no-route]
+2. map route for backend app
+   cf map-route backend apps.internal --hostname backend
+3. push frontend app
+   cf push frontend -p .
+4. create network policy for fronend->backend
+   cf add-network-policy frontadd backend --protocol tcp --port 8080
+   (tip: different cf version has differet command format)
+   url: https://docs.pivotal.io/application-service/2-7/devguide/deploy-apps/cf-networking.html
+
+5. uaac command
+   url: https://docs.pivotal.io/application-service/2-7/uaa/uaa-user-management.html
+
+

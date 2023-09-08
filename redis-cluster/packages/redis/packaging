@@ -1,0 +1,9 @@
+set -e -u
+
+tar xzvf redis/redis-6.2.13.tar.gz
+mkdir ${BOSH_INSTALL_TARGET}/config
+chown -R vcap:vcap ${BOSH_INSTALL_TARGET}/config
+cp redis.conf ${BOSH_INSTALL_TARGET}/config/
+
+cd redis-*
+make PREFIX=${BOSH_INSTALL_TARGET} install

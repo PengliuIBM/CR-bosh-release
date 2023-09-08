@@ -1,0 +1,7 @@
+---
+name: redis
+dependences: []
+
+files:
+- redis/redis-6.2.13.tar.gz
+- redis.conf

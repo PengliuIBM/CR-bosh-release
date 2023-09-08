@@ -1,0 +1,28 @@
+---
+name: redis
+
+templates:
+  ctl.erb: bin/ctl                # /var/vcap/jobs/redis/bin/ctl
+  post-deploy.erb: bin/post-deploy
+  pre-start.erb: bin/pre-start
+  config/redis.conf.erb: config/redis.conf
+
+packages:
+- redis
+
+
+consumes:
+- name: peers
+  type: redis_peers
+
+
+provides:
+- name: peers
+  type: redis_peers
+  properties:
+  - redis.cluster-enable
+
+properties:
+  redis.cluster-enable:
+    description: "enable cluster status"
+    default: "yes"
